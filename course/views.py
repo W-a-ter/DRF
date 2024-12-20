@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
 
 from course.models import Course, Lesson
-from course.serializers import CourseSerializer
+from course.serializers import CourseSerializer, LessonSerializer
 
 
 class CourseViewSet(ModelViewSet):
@@ -13,27 +13,27 @@ class CourseViewSet(ModelViewSet):
 class LessonCreateAPIView(generics.CreateAPIView):
     """Реализация представления создания уроков через generic. CreateAPIView"""
 
-    serializer_class = CourseSerializer
+    serializer_class = LessonSerializer
 
 
 class LessonListAPIView(generics.ListAPIView):
     """Реализация представления просмотра всех уроков через generic. ListAPIView"""
 
-    serializer_class = CourseSerializer
+    serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
     """Реализация представления просмотра одного урока через generic. ListAPIView"""
 
-    serializer_class = CourseSerializer
+    serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
     """Реализация представления изменения урока через generic. UpdateAPIView"""
 
-    serializer_class = CourseSerializer
+    serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
 
 
