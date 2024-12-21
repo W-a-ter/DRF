@@ -1,4 +1,6 @@
-from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics, filters
+from rest_framework.filters import SearchFilter
 from rest_framework.viewsets import ModelViewSet
 
 from course.models import Course, Lesson
@@ -8,7 +10,10 @@ from course.serializers import CourseSerializer, LessonSerializer
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-
+    filter_backends = [filters.OrderingFilter, DjangoFilterBackend, SearchFilter]
+    search_fields = ['payment_method']
+    ordering_fields = ['date_pay']
+    filterset_fields = ['lesson', 'course']
 
 class LessonCreateAPIView(generics.CreateAPIView):
     """Реализация представления создания уроков через generic. CreateAPIView"""
@@ -38,6 +43,5 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
-    """Реализация представления удаления урока через generic. DestroyAPIView"""
 
     queryset = Lesson.objects.all()
