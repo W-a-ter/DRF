@@ -15,6 +15,7 @@ class CourseViewSet(ModelViewSet):
     ordering_fields = ['date_pay']
     filterset_fields = ['lesson', 'course']
 
+
 class LessonCreateAPIView(generics.CreateAPIView):
     """Реализация представления создания уроков через generic. CreateAPIView"""
 
