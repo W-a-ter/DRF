@@ -1,25 +1,37 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, filters
-from rest_framework.filters import SearchFilter
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import viewsets, generics
+from rest_framework.permissions import IsAuthenticated
 
 from course.models import Course, Lesson
 from course.serializers import CourseSerializer, LessonSerializer
+from users.permissions import IsModerator, IsOwner
 
 
-class CourseViewSet(ModelViewSet):
-    queryset = Course.objects.all()
+class CourseViewSet(viewsets.ModelViewSet):
+    """Реализация представления курсов через ViewSet (полный crud)"""
+
     serializer_class = CourseSerializer
-    filter_backends = [filters.OrderingFilter, DjangoFilterBackend, SearchFilter]
-    search_fields = ['payment_method']
-    ordering_fields = ['date_pay']
-    filterset_fields = ['lesson', 'course']
+    queryset = Course.objects.all()
+
+    def perform_create(self, serializer):
+        course = serializer.save()
+        course.owner = self.request.user
+        course.save()
+
+    def get_permissions(self):
+        if self.action == "create":
+            self.permission_classes = [~IsModerator]
+        elif self.action in ["retrieve", "update"]:
+            self.permission_classes = (IsModerator | IsOwner,)
+        elif self.action == "destroy":
+            self.permission_classes = (~IsModerator | IsOwner,)
+        return super().get_permissions()
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
     """Реализация представления создания уроков через generic. CreateAPIView"""
 
     serializer_class = LessonSerializer
+    permission_classes = (~IsModerator, IsAuthenticated)
 
 
 class LessonListAPIView(generics.ListAPIView):
@@ -28,12 +40,21 @@ class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
 
+    def perform_create(self, serializer):
+        lesson = serializer.save()
+        lesson.owner = self.request.user
+        lesson.save()
+
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
     """Реализация представления просмотра одного урока через generic. ListAPIView"""
 
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
+    permission_classes = (
+        IsAuthenticated,
+        IsModerator | IsOwner,
+    )
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
@@ -41,8 +62,16 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
 
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
+    permission_classes = (
+        IsAuthenticated,
+        IsModerator | IsOwner,
+    )
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
 
     queryset = Lesson.objects.all()
+    permission_classes = (
+        IsAuthenticated,
+        ~IsModerator | IsOwner,
+    )

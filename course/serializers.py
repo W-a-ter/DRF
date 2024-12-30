@@ -1,7 +1,7 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
-from course.models import Lesson, Course
+from course.models import Course, Lesson
 
 
 class CourseSerializer(ModelSerializer):

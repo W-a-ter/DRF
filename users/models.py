@@ -21,9 +21,15 @@ class User(AbstractUser):
 
 
 class Payment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user", verbose_name="пользователь", default=None)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user", verbose_name="пользователь", default=None
+    )
     date_pay = models.DateTimeField(verbose_name="Дата оплаты", auto_now_add=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="курс", blank=True, null=True)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name="урок", blank=True, null=True)
     amount = models.PositiveIntegerField(verbose_name="сумма оплаты")
-    payment_method = models.CharField(max_length=16, choices=[("Наличными", "Наличными"), ("Перевод на карту", "Перевод на карту")], verbose_name='Способ оплаты')
+    payment_method = models.CharField(
+        max_length=16,
+        choices=[("Наличными", "Наличными"), ("Перевод на карту", "Перевод на карту")],
+        verbose_name="Способ оплаты",
+    )

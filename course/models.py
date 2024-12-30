@@ -20,6 +20,7 @@ class Lesson(models.Model):
     description = models.TextField(verbose_name="Описание", blank=True, null=True)
     video = models.URLField(verbose_name="ссылка на видео")
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="lesson", verbose_name="курс")
+    owner = models.ForeignKey("users.User", on_delete=models.SET_NULL, verbose_name="владелец", null=True, blank=True)
 
     def __str__(self):
         return f"{self.title}"

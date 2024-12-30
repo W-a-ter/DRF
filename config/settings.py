@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -25,7 +26,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "users",
     "course",
-    'django_filters',
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -65,11 +66,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv('NAME'),
-        "USER": 'postgres',
-        "HOST": 'localhost',
-        "PORT": '5436',
-        "PASSWORD": '1111',
+        "NAME": os.getenv("NAME"),
+        "USER": "postgres",
+        "HOST": "localhost",
+        "PORT": "5436",
+        "PASSWORD": "1111",
     }
 }
 
@@ -119,10 +120,15 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-    ),
+    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
 
 AUTH_USER_MODEL = "users.User"
