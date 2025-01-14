@@ -26,7 +26,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "users",
     "course",
-    "django_filters",
+    "django_filters",  # required for serving swagger ui's css/js files
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -73,6 +74,8 @@ DATABASES = {
         "PASSWORD": "1111",
     }
 }
+
+STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
 
 
 # Password validation

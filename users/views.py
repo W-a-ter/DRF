@@ -5,7 +5,8 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 
 from users.models import Payment, User
-from users.serializers import PaymentSerializer, UserSerializer
+from users.serializers import PaymentSerializer, UserSerializer, PaymentSessionRetrieveSerializer
+from users.services import strip_create_product, strip_create_price, strip_create_sessions
 
 
 class UserCreateAPIView(generics.CreateAPIView):
@@ -48,12 +49,36 @@ class UserDestroyAPIView(generics.DestroyAPIView):
     queryset = User.objects.all()
 
 
+class PaymentCreateAPIView(generics.CreateAPIView):
+    """Реализация представления создания оплаты через generic. CreateAPIView"""
+    serializer_class = PaymentSerializer
+    queryset = Payment.objects.all()
+
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+        print(payment.course, payment.lesson)
+        if payment.course is not None:
+            product = strip_create_product(payment.course.title)
+        elif payment.lesson is not None:
+            product = strip_create_product(payment.lesson.title)
+
+        price = strip_create_price(product, payment.amount)
+        session_id, payment_link = strip_create_sessions(price)
+        payment.session_id = session_id
+        payment.link = payment_link
+        payment.save()
+
+
+class PaymentSessionRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = PaymentSessionRetrieveSerializer
+    queryset = Payment.objects.all()
+
+
 class PaymentListAPIView(ListAPIView):
     """Реализация представления оплаты курса/урока через ViewSet (полный crud)"""
-
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
-    search_fields = ["payment_method"]
-    ordering_fields = ["date_pay"]
-    filterset_fields = ["lesson", "course"]
+    search_fields = ['payment_method']
+    ordering_fields = ['date_pay']
+    filterset_fields = ['lesson', 'course']
