@@ -19,10 +19,11 @@ class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         fields = "__all__"
-        validators = [LessonVideoValidator(field='video')]
+        validators = [LessonVideoValidator(field="video")]
 
     def get_lesson(self, obj):
         return obj.lesson.count()
+
 
 class SubscriptionCourseSerializer(ModelSerializer):
 

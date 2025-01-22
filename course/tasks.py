@@ -1,4 +1,3 @@
-import time
 from datetime import timedelta
 
 from celery import shared_task
@@ -15,10 +14,12 @@ from users.models import User
 @shared_task
 def send_mail_receiver(email: list):
     """Функция отправки сообщений всем кто подписан на курс, когда курс изменяется"""
-    send_mail(subject="Материалы курса обновлены.",
-              message="Вы подписаны на курс, который изменился, переходите на сайт для ознакомления!",
-              from_email=EMAIL_HOST_USER,
-              recipient_list=email)
+    send_mail(
+        subject="Материалы курса обновлены.",
+        message="Вы подписаны на курс, который изменился, переходите на сайт для ознакомления!",
+        from_email=EMAIL_HOST_USER,
+        recipient_list=email,
+    )
 
 
 @shared_task

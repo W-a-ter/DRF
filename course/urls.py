@@ -8,7 +8,8 @@ from course.views import (
     LessonDestroyAPIView,
     LessonListAPIView,
     LessonRetrieveAPIView,
-    LessonUpdateAPIView, SubscriptionCourseAPIView,
+    LessonUpdateAPIView,
+    SubscriptionCourseAPIView,
 )
 
 app_name = CourseConfig.name
@@ -22,8 +23,7 @@ urlpatterns = [
     path("lesson/<int:pk>/", LessonRetrieveAPIView.as_view(), name="lesson-detail"),
     path("lesson/update/<int:pk>/", LessonUpdateAPIView.as_view(), name="lesson-update"),
     path("lesson/delete/<int:pk>/", LessonDestroyAPIView.as_view(), name="lesson-delete"),
-
-    path('courses/subscription/', SubscriptionCourseAPIView.as_view(), name='subscription')
+    path("courses/subscription/", SubscriptionCourseAPIView.as_view(), name="subscription"),
 ]
 
 urlpatterns += router.urls

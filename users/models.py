@@ -22,12 +22,19 @@ class User(AbstractUser):
 
 class Payment(models.Model):
     """Модель оплаты курса/урока."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user", verbose_name="пользователь", default=None)
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user", verbose_name="пользователь", default=None
+    )
     date_pay = models.DateTimeField(verbose_name="Дата оплаты", auto_now_add=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="курс", blank=True, null=True)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name="урок", blank=True, null=True)
     amount = models.PositiveIntegerField(verbose_name="сумма оплаты")
-    payment_method = models.CharField(max_length=16, choices=[("Наличными", "Наличными"), ("Перевод на карту", "Перевод на карту")], verbose_name='Способ оплаты')
+    payment_method = models.CharField(
+        max_length=16,
+        choices=[("Наличными", "Наличными"), ("Перевод на карту", "Перевод на карту")],
+        verbose_name="Способ оплаты",
+    )
     session_id = models.CharField(max_length=255, verbose_name="id сессии", blank=True, null=True)
     link = models.URLField(max_length=400, verbose_name="ссылка на оплату", blank=True, null=True)
 
@@ -35,5 +42,5 @@ class Payment(models.Model):
         return f"{self.user}"
 
     class Meta:
-        verbose_name = 'Оплата'
-        verbose_name_plural = 'Оплаты'
+        verbose_name = "Оплата"
+        verbose_name_plural = "Оплаты"

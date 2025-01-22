@@ -1,3 +1,4 @@
+import stripe
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
@@ -27,4 +28,6 @@ class PaymentSessionRetrieveSerializer(ModelSerializer):
         fields = ("status",)
 
     def get_status(self, obj):
-        return stripe.checkout.Session.retrieve(obj.session_id,)
+        return stripe.checkout.Session.retrieve(
+            obj.session_id,
+        )

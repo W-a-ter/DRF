@@ -92,8 +92,8 @@ class SubscriptionCourseAPIView(generics.ListAPIView):
 
         if subs_item.exists():
             subs_item.delete()
-            message = 'Подписка отключена'
+            message = "Подписка отключена"
         else:
             SubscriptionCourse.objects.create(user=user, course=course_item)
-            message = 'Подписка включена'
+            message = "Подписка включена"
         return Response({"message": message})

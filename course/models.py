@@ -31,7 +31,7 @@ class Lesson(models.Model):
 
 
 class SubscriptionCourse(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name="пользователь")
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE, verbose_name="пользователь")
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="Курс")
 
     def __str__(self):

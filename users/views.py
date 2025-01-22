@@ -51,6 +51,7 @@ class UserDestroyAPIView(generics.DestroyAPIView):
 
 class PaymentCreateAPIView(generics.CreateAPIView):
     """Реализация представления создания оплаты через generic. CreateAPIView"""
+
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
 
@@ -76,9 +77,10 @@ class PaymentSessionRetrieveAPIView(generics.RetrieveAPIView):
 
 class PaymentListAPIView(ListAPIView):
     """Реализация представления оплаты курса/урока через ViewSet (полный crud)"""
+
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
-    search_fields = ['payment_method']
-    ordering_fields = ['date_pay']
-    filterset_fields = ['lesson', 'course']
+    search_fields = ["payment_method"]
+    ordering_fields = ["date_pay"]
+    filterset_fields = ["lesson", "course"]
