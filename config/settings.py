@@ -84,7 +84,7 @@ else:
             "PORT": "5436",
             "PASSWORD": os.getenv("PASSWORD"),
         }
-}
+    }
 
 STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
 
