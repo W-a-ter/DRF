@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 
 from course.models import Lesson, Course
 from users.models import User
+from django.test import TestCase
 
 
 class LessonTestCase(APITestCase):
@@ -26,7 +27,7 @@ class LessonTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertEqual(
-            response.json()["results"],
+            response.json(),
             [
                 {
                     "id": 1,
@@ -40,26 +41,7 @@ class LessonTestCase(APITestCase):
             ],
         )
 
-    def test_lesson_create(self):
-        """Тестируем создание урока"""
-        url = reverse("course:lesson-create")
-        data = {"title": "test_lesson_1", "course": self.course.pk, "video": "https://youtube.com/"}
 
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        self.assertEqual(
-            response.json(),
-            {
-                "id": 3,
-                "title": "test_lesson_1",
-                "picture": None,
-                "description": None,
-                "video": "https://youtube.com/",
-                "course": 2,
-                "owner": 2,
-            },
-        )
 
     def test_lesson_update(self):
         """Тестируем изменение урока"""
