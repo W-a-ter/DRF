@@ -42,7 +42,7 @@ class LessonTestCase(APITestCase):
 
     def test_lesson_create(self):
         """Тестируем создание урока"""
-        url = reverse("lms:lesson-create")
+        url = reverse("course:lesson-create")
         data = {"title": "test_lesson_1", "course": self.course.pk, "video": "https://youtube.com/"}
 
         response = self.client.post(url, data)
@@ -63,7 +63,7 @@ class LessonTestCase(APITestCase):
 
     def test_lesson_update(self):
         """Тестируем изменение урока"""
-        url = reverse("lms:lesson-update", args=(self.lesson.pk,))
+        url = reverse("course:lesson-update", args=(self.lesson.pk,))
         data = {"title": "test_lesson_2", "video": "https://test.youtube.com/"}
 
         response = self.client.patch(url, data)
@@ -73,7 +73,7 @@ class LessonTestCase(APITestCase):
 
     def test_lesson_detail(self):
         """Тестируем изменение урока"""
-        url = reverse("lms:lesson-detail", args=(self.lesson.pk,))
+        url = reverse("course:lesson-detail", args=(self.lesson.pk,))
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -82,7 +82,7 @@ class LessonTestCase(APITestCase):
 
     def test_lesson_delete(self):
         """Тестируем изменение урока"""
-        url = reverse("lms:lesson-delete", args=(self.lesson.pk,))
+        url = reverse("course:lesson-delete", args=(self.lesson.pk,))
 
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
