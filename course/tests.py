@@ -41,8 +41,6 @@ class LessonTestCase(APITestCase):
             ],
         )
 
-
-
     def test_lesson_update(self):
         """Тестируем изменение урока"""
         url = reverse("course:lesson-update", args=(self.lesson.pk,))
