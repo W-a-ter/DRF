@@ -4,7 +4,6 @@ from rest_framework.test import APITestCase
 
 from course.models import Lesson, Course
 from users.models import User
-from django.test import TestCase
 
 
 class LessonTestCase(APITestCase):
