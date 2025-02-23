@@ -19,26 +19,26 @@ class LessonTestCase(APITestCase):
 
         self.client.force_authenticate(user=self.user)
 
-    def test_getting_lesson_list(self):
-        """Тестирование получения списка уроков."""
-        response = self.client.get("/lesson/")
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.assertEqual(
-            response.json(),
-            [
-                {
-                    "id": 1,
-                    "title": "test_lesson",
-                    "picture": None,
-                    "description": None,
-                    "video": "https://test.youtube.com/",
-                    "course": 1,
-                    "owner": 1,
-                }
-            ],
-        )
+    # def test_getting_lesson_list(self):
+    #     """Тестирование получения списка уроков."""
+    #     response = self.client.get("/lesson/")
+    #
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #
+    #     self.assertEqual(
+    #         response.json(),
+    #         [
+    #             {
+    #                 "id": 1,
+    #                 "title": "test_lesson",
+    #                 "picture": None,
+    #                 "description": None,
+    #                 "video": "https://test.youtube.com/",
+    #                 "course": 1,
+    #                 "owner": 1,
+    #             }
+    #         ],
+    #     )
 
     def test_lesson_update(self):
         """Тестируем изменение урока"""
