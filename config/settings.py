@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "users",
     "course",
-    "django_filters",  # required for serving swagger ui's css/js files
+    "django_filters",
     "drf_yasg",
     "django_celery_beat",
 ]
