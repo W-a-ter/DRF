@@ -23,8 +23,8 @@ class Lesson(models.Model):
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
     video = models.URLField(max_length=515, verbose_name='ссылка на видео', blank=True, null=True
                             )
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="lesson", verbose_name="курс", blank=True,
-                               null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="lesson", verbose_name="курс",
+                               blank=True, null=True)
     owner = models.ForeignKey('users.User', on_delete=models.SET_NULL, verbose_name="владелец", null=True, blank=True)
     amount = models.PositiveIntegerField(default=0, verbose_name="сумма покупки", blank=True, null=True)
 
