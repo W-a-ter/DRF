@@ -43,6 +43,18 @@ services:
       #- .env
     networks:
       - drf
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/nginx/staticfiles
+    depends_on:
+      - DRF
+    networks:
+      - DRF_network
 volumes:
   postgres_data:
   static_volume:

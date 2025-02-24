@@ -86,11 +86,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Update Nginx configuration
-        run: |
-          STATIC_ROOT=$(pwd)/staticfiles  # Укажите путь к статическим файлам
-          sed "s|{{ STATIC_ROOT }}|$STATIC_ROOT|g" nginx.template.conf > nginx.conf
-
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
