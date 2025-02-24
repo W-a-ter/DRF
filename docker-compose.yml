@@ -1,48 +1,70 @@
 services:
-  db:
+  postgres:
     image: postgres:latest
-    #env_file:
-      #- .env
+    environment:
+      POSTGRES_DB: ${NAME}
+      POSTGRES_USER: ${USER}
+      POSTGRES_PASSWORD: ${PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - drf
-#    healthcheck:
-#      test: ['CMD_SHELL', 'pg-isready -U postgres']
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
+      - lms_network
+
   redis:
     image: redis:latest
     networks:
-      - drf
+      - DRF_network
+
   celery:
     build: .
-    command: poetry run celery -A config worker -l INFO
+    command: poetry run celery -A config worker -l INFO -P eventlet
+    volumes:
+      - .:/DRF
+    depends_on:
+      - postgres
+      - redis
     networks:
-      - drf
-  celerybeat:
+      - DRF_network
+
+  celery-beat:
     build: .
     command: poetry run celery -A config beat -l INFO
+    volumes:
+      - .:/DRF
+    depends_on:
+      - postgres
+      - redis
     networks:
-      - drf
-  drf:
+      - DRF_network
+
+  lms_drf:
     build:
       context: .
       dockerfile: Dockerfile
+    command: sh -c "poetry run python manage.py collectstatic --noinput && poetry run gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - .:/code
-      - static_volume:/code/static
+      - .:/DRF
+      - static_volume:/DRF/staticfiles
     ports:
-      - '8000:8000'
+      - "8000:8000"
     environment:
       - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
       - DATABASE_URL=postgres://${USER}:${PASSWORD}@postgres:${PORT}/${NAME}
       - STRIPE_API_KEY=${STRIPE_API_KEY}
-    #env_file:
-      #- .env
+      - EMAIL_BACKEND=${EMAIL_BACKEND}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_USE_TLS=${EMAIL_USE_TLS}
+      - EMAIL_USE_SSL=${EMAIL_USE_SSL}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+    depends_on:
+      - postgres
+      - redis
     networks:
-      - drf
+      - DRF_network
+
   nginx:
     build:
       context: ./nginx
@@ -55,8 +77,10 @@ services:
       - DRF
     networks:
       - DRF_network
+
+networks:
+  DRF_network:
+
 volumes:
   postgres_data:
   static_volume:
-networks:
-  drf:
