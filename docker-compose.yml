@@ -8,7 +8,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - lms_network
+      - DRF_network
 
   redis:
     image: redis:latest
@@ -37,7 +37,7 @@ services:
     networks:
       - DRF_network
 
-  lms_drf:
+  DRF:
     build:
       context: .
       dockerfile: Dockerfile
