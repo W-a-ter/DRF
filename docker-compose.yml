@@ -1,0 +1,78 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${NAME}
+      POSTGRES_USER: ${USER}
+      POSTGRES_PASSWORD: ${PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - drf_network
+
+  redis:
+    image: redis:latest
+    networks:
+      - drf_network
+
+  celery:
+    build: .
+    command: poetry run celery -A config worker -l INFO -P eventlet
+    volumes:
+      - .:/drf
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - drf_network
+
+  celery-beat:
+    build: .
+    command: poetry run celery -A config beat -l INFO
+    volumes:
+      - .:/drf
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - drf_network
+
+  drf:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "poetry run python manage.py collectstatic --noinput && poetry run gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - .:/drf
+      - static_volume:/drf/staticfiles
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=postgres://${USER}:${PASSWORD}@postgres:${PORT}/${NAME}
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - drf_network
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/nginx/staticfiles
+    depends_on:
+      - drf
+    networks:
+      - drf_network
+
+networks:
+  drf_network:
+
+volumes:
+  postgres_data:
+  static_volume:
